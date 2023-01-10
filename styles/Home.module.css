@@ -1,13 +1,12 @@
 .main {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
-  padding: 6rem;
+  padding: 0 2rem;
   min-height: 100vh;
 }
 
-.description {
+.container {
   display: inherit;
   justify-content: inherit;
   align-items: inherit;

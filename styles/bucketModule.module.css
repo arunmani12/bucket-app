@@ -1,0 +1,119 @@
+.modelContainer {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    /* background-color: white; */
+    /* align-items: center; */
+    /* background: blur(-5px); */
+    backdrop-filter: blur(10px);
+    z-index: 10;
+    font-family: var(--font-mono);
+}
+
+
+
+.model {
+    margin-top: 5%;
+    width: 400px;
+    /* height: 80vh; */
+    border: 1px solid gray;
+    height: 200px;
+    background-color: #fff;
+    color: #4d54bd;
+    padding: 1rem;
+    position: relative;
+}
+
+
+
+.model h1{
+    margin-bottom: 1rem;
+    color: #b81e75;
+    font-weight: 400;
+}
+
+.model input,
+.model textarea,
+.model select {
+    display: block;
+    background-color: #fff;
+    border: 1px solid #4d54bd;
+    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
+    outline: none;
+    color: #000;
+    width: 85%;
+    font-size: 16px;
+}
+
+.model label {
+    display: block;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+    font-size: 22px;
+}
+
+.model button {
+    padding: 0.5rem 1.25rem;
+    background-color: #4d54bd;
+    font-family: var(--font-mono);
+    border: 1px solid #4d54bd;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    margin-top: 1rem;
+}
+
+
+.videoCard{
+    margin-top: 2rem;
+}
+
+.prvVideo{
+    margin-top: 2rem;
+    height: 200px;
+    border: 1px dotted gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #777;
+}
+
+.historCard{
+    padding: 1%;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    margin-bottom: 2%;
+    border-radius: 5px;
+    color: #777;
+    transition: all 0.5s;
+}
+
+.historCard:hover{
+   transform: translateY(-2px);
+   background-color: rgb(209, 209, 209);
+}
+
+.historCard h2{
+    margin-bottom: 1.5%;
+}
+
+.histordCardLabel{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    /* border-top: 1px solid grey; */
+}
+
+
+@media only screen and (max-width: 600px) {
+
+    .model{
+        margin-top: 40%;
+    }
+
+   
+}
