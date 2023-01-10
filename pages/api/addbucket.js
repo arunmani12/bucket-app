@@ -43,7 +43,7 @@ export default async function handler(req, res) {
         
         }catch(e){
 
-            console.log(e)
+
 
             return res.status(403).json({ message:'something went to wrong' });
         }

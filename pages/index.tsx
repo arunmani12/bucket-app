@@ -45,7 +45,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     let response = await res.json();
 
-    // console.log(response);
 
     return {
       props: {

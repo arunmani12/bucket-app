@@ -31,8 +31,6 @@ export default async function handler(req, res) {
       let user = await User.findOne({ email: dataFromToken.email })
 
       
-      console.log(card)
-
       await User.update(
         { _id: user.id }, 
         { $push: { history:{card: card._id,time:new Date()} } },
