@@ -7,27 +7,28 @@ import BucketCard from "../components/bucketcard/BucketCard";
 import CreateCardModel from "../components/model/CreateCardmodel";
 import CardPreviewModel from "../components/model/CardPreviewModel";
 import HistoryModel from "./model/HistoryModal";
+import MoveToModel from "./model/MoveToModel";
+import Loading from "../components/Loading";
 
 const DashBoard = ({ user }: { user: any }) => {
-  const [openNewBucket, setOpenNewBucket] = React.useState< {
+  const [openNewBucket, setOpenNewBucket] = React.useState<{
     type: "edit" | "new";
     isOpen: boolean;
-   }>({
-    type:'edit',
-    isOpen:false
+  }>({
+    type: "edit",
+    isOpen: false,
   });
 
   const [isHistoryModelOpen, setIsHistoryModelOpen] =
     React.useState<boolean>(false);
 
-  const [openNewCardModel, setOpenNewCardModel] =
-    React.useState<{
-      type: 'edit' | 'new';
-      isOpen: boolean;
-    }>({
-      type:'new',
-      isOpen:false
-    });
+  const [openNewCardModel, setOpenNewCardModel] = React.useState<{
+    type: "edit" | "new";
+    isOpen: boolean;
+  }>({
+    type: "new",
+    isOpen: false,
+  });
 
   const [openBucketCard, setOpenBucketCard] = React.useState<boolean>(false);
 
@@ -40,7 +41,15 @@ const DashBoard = ({ user }: { user: any }) => {
     { label: string; url: string } | undefined
   >(undefined);
 
-  const [currentEditData,setCurrentEditData] = React.useState<any>(undefined)
+  const [currentEditData, setCurrentEditData] = React.useState<any>(undefined);
+
+  const [loading, setLoading] = React.useState<boolean>(false);
+
+  const [isMoveToModelOpen, setIsMoveToModelOpen] = React.useState({
+    isOpen: false,
+    currentCard: "",
+    currentBucket: "",
+  });
 
   const bugetClickHandler = (id: string) => {
     const buget = user.bucket.find((d: any) => d._id === id);
@@ -50,15 +59,12 @@ const DashBoard = ({ user }: { user: any }) => {
     setOpenBucketCard((prv) => !prv);
   };
 
-  // console.log(currentEditData,openNewCardModel.type)
-
   const togglePrevieCard = async (
     label: string,
     url: string,
     cardId: string,
     bucketId: string
   ) => {
-
     const res = await fetch(`/api/addhistory`, {
       method: "POST",
       headers: {
@@ -72,10 +78,8 @@ const DashBoard = ({ user }: { user: any }) => {
     let response = await res.json();
 
     if (response.message == "success") {
-     
     } else {
       alert("error");
-  
     }
 
     setCurrentPrvData({
@@ -95,12 +99,30 @@ const DashBoard = ({ user }: { user: any }) => {
 
   return (
     <main className={styles.main}>
-      {openNewBucket.isOpen && (
-        <BucketMode setOpenNewBucket={setOpenNewBucket} type={openNewBucket.type} />
+      {loading && <Loading />}
+
+      {isMoveToModelOpen.isOpen && (
+        <MoveToModel
+          setCurrentBugetData={setCurrentBugetData}
+          isMoveToModelOpen={isMoveToModelOpen}
+          setIsMoveToModelOpen={setIsMoveToModelOpen}
+          setLoading={setLoading}
+        />
       )}
- 
+
+      {openNewBucket.isOpen && (
+        <BucketMode
+          setOpenNewBucket={setOpenNewBucket}
+          type={openNewBucket.type}
+          setLoading={setLoading}
+        />
+      )}
+
       {isHistoryModelOpen && (
-        <HistoryModel setIsHistoryModelOpen={setIsHistoryModelOpen} togglePrevieCardWithoutHistory={togglePrevieCardWithoutHistory}/>
+        <HistoryModel
+          setIsHistoryModelOpen={setIsHistoryModelOpen}
+          togglePrevieCardWithoutHistory={togglePrevieCardWithoutHistory}
+        />
       )}
 
       <NavBar
@@ -119,8 +141,11 @@ const DashBoard = ({ user }: { user: any }) => {
         <CreateCardModel
           editData={currentEditData}
           bucketId={currentBugetData?._id}
+          currentBugetData={currentBugetData}
           type={openNewCardModel.type}
           setOpenNewCardModel={setOpenNewCardModel}
+          setCurrentBugetData={setCurrentBugetData}
+          setLoading={setLoading}
         />
       )}
 
@@ -141,6 +166,9 @@ const DashBoard = ({ user }: { user: any }) => {
           currentBugetData={currentBugetData}
           togglePrevieCard={togglePrevieCard}
           setCurrentEditData={setCurrentEditData}
+          setCurrentBugetData={setCurrentBugetData}
+          setIsMoveToModelOpen={setIsMoveToModelOpen}
+          setLoading={setLoading}
         />
       )}
     </main>

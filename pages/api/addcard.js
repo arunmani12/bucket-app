@@ -35,7 +35,7 @@ export default async function handler(req, res) {
       await card.save()
   
 
-      return res.status(200).json({ message: "success" });
+      return res.status(200).json({ message: "success" ,card});
     } catch (e) {
       console.log(e);
 

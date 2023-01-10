@@ -9,6 +9,9 @@ const CreateCardModel = ({
   bucketId,
   type = "edit",
   editData,
+  setCurrentBugetData,
+  currentBugetData,
+  setLoading
 }: {
   setOpenNewCardModel: React.Dispatch<
     React.SetStateAction<{
@@ -17,8 +20,11 @@ const CreateCardModel = ({
     }>
   >;
   bucketId: string;
+  setCurrentBugetData: React.Dispatch<any>
   type?: "edit" | "new";
   editData?: any;
+  currentBugetData:any
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
   const [link, setLink] = React.useState<string>("");
   const [title, setTitle] = React.useState<string>("");
@@ -27,6 +33,15 @@ const CreateCardModel = ({
   const sourceRef = React.useRef<HTMLSourceElement>(null);
 
   const router = useRouter();
+
+  React.useEffect(()=>{
+
+    if(type==='edit'){
+      setLink(editData.url)
+      setTitle(editData.name)
+    }
+
+  },[])
 
   const urlChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLink(e.target.value);
@@ -37,11 +52,12 @@ const CreateCardModel = ({
     videoRef.current?.play();
   };
 
-  console.log(type,editData)
-  //   const src = "https://youtu.be/j_MuZmJNirw";
+
 
   const addCardHandler = async () => {
     if (!link.length) return;
+
+    setLoading(true)
 
     const res = await fetch(`/api/addcard`, {
       method: "POST",
@@ -57,8 +73,75 @@ const CreateCardModel = ({
     let response = await res.json();
 
     if (response.message == "success") {
-      router.reload();
+      router.replace(router.asPath);
+
+      let copyData = {...currentBugetData,card:[...currentBugetData.card,response.card]}
+
+
+      setCurrentBugetData(copyData)
+      
+
+      setOpenNewCardModel(prv=>(
+        {
+          type:'new',
+          isOpen:!prv.isOpen
+        }
+      ))
+
+      setLoading(false)
+
     } else {
+      setLoading(false)
+
+      toast.error("something went to wrong");
+    }
+  };
+
+
+  const editCardHandler = async () => {
+    if (!link.length) return;
+
+    setLoading(true)
+
+    const res = await fetch(`/api/editcard`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id:editData._id,
+        link,
+        title,
+      }),
+    });
+    let response = await res.json();
+
+    if (response.message == "success") {
+
+      router.replace(router.asPath);
+
+      var card = currentBugetData.card.find((d:any) => d._id === editData._id)
+
+      var index = currentBugetData.card.indexOf(card)
+
+      var copyData = {...currentBugetData}
+
+      copyData.card[index] = {...copyData.card[index],name:title,url:link}
+
+      setCurrentBugetData(copyData)
+      
+      setOpenNewCardModel(prv=>(
+        {
+          type:'new',
+          isOpen:!prv.isOpen
+        }
+      ))
+
+      setLoading(false)
+      
+    } else {
+      setLoading(false)
+
       toast.error("something went to wrong");
     }
   };
@@ -80,7 +163,7 @@ const CreateCardModel = ({
         />
 
         <div>
-          <h1>New Video Card</h1>
+          <h1>{type === 'new' ? 'New Video Card' : 'Update Card' }</h1>
           <form>
             <label htmlFor="Name">Name</label>
             <input
@@ -114,10 +197,16 @@ const CreateCardModel = ({
               </div>
             )}
           </form>
-          <button onClick={addCardHandler}>Create</button>
+          <button onClick={type ==='new'? addCardHandler : editCardHandler}>
+            {
+              type === 'new' ?
+              'Submit' :
+              'Update'
+            }
+          </button>
         </div>
 
-        {/* <BucketForm heading="New Video Card" label="Name" btnTxt="Create" /> */}
+   
       </div>
     </div>
   );

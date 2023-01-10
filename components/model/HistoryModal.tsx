@@ -10,11 +10,15 @@ const HistoryModel = ({
   togglePrevieCardWithoutHistory:(label: string, url: string) => void
 }) => {
   const [histroy, setHistory] = React.useState([]);
+  const [historyIsLoading, setHistoryIsLoading] = React.useState(false)
 
   React.useEffect(() => {
     (async function fetchHistory() {
+      setHistoryIsLoading(true)
       const res = await fetch(`/api/gethistory`);
       let response = await res.json();
+
+      setHistoryIsLoading(false)
 
       setHistory(response.history);
     })();
@@ -42,6 +46,8 @@ const HistoryModel = ({
         />
 
         <h1>History</h1>
+
+        {historyIsLoading && <div style={{ marginTop: "10px" }} className="lds-hourglass-brown"></div>}
 
         <div style={{ overflowY: "scroll", height: "90%" }}>
           {histroy.map((d: any, i: any) => (

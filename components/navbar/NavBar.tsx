@@ -36,7 +36,7 @@ const NavBar = ({name,setIsHistoryModelOpen}:{name:string,setIsHistoryModelOpen:
             <div>
 
 
-                <button onClick={()=>setIsHistoryModelOpen(prv=>!prv)}>History<FaHistory color='#f65a41'/></button>
+                <button className={styles.Btnl} onClick={()=>setIsHistoryModelOpen(prv=>!prv)}>History<FaHistory color='#f65a41'/></button>
                 <button onClick={logOutHandler}>Logout</button>
 
             </div>

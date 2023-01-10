@@ -40,13 +40,13 @@ const Bucket = ({setOpenNewBucket,setOpenBucketCard,buckets,bugetClickHandler}:{
         ))}
       </div>
 
-      <div className={styles.btnHolder}>
+      {/* <div className={styles.btnHolder}>
         <BsFillArrowLeftCircleFill
           size={26}
           style={{ marginRight: "0.5rem" }}
         />
         <BsFillArrowRightCircleFill size={26} />
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -5,6 +5,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { GetServerSideProps } from "next";
 
+
+
 export default function Home({
   authorized,
   user,

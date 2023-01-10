@@ -27,8 +27,6 @@ export default async function handler(req, res) {
         url: req.body.link
       };
 
-      // `doc` is the document _after_ `update` was applied because of
-      // `new: true`
       await Card.findOneAndUpdate(filter, update, {
         new: true,
       });

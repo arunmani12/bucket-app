@@ -13,7 +13,7 @@ export default async function handler(req, res) {
 
   if (method === "POST") {
     try {
-      const jwt = req.headers.authorization;
+      const jwt = req.cookies.token;
 
       if (!jwt) {
         res.status(403).json({ message: "un authorized" });
@@ -21,30 +21,53 @@ export default async function handler(req, res) {
 
       const dataFromToken = verify(jwt, secret);
 
+      await Card.findByIdAndDelete(req.body.id);
 
-    User.find({ email: dataFromToken.email })
+      var newHistory = [];
+
+
+      await User.find({ email: dataFromToken.email })
         .lean()
-        .populate({ path: "bucket" })
+        .populate({ path: "history" })
         .exec(function (err, docs) {
           var options = {
-            path: "bucket.card",
+            path: "history.card",
             model: "Card",
           };
 
           if (err) {
-
             return res.status(403).json({ message: "something went to wrong" });
+          }
 
-          };
           User.populate(docs, options, function (err, user) {
-        
+            var history = user[0].history;
 
-            return res.status(200).json({ user: user[0], message: "success" });
+          
 
+            newHistory = history.filter((d) => d.card !== null);
+
+
+            const filter = { email: dataFromToken.email };
+
+            const update = { history: newHistory };
+            
+            User.findOneAndUpdate(filter, update,null,function (err, docs) {
+
+              if (err){
+                console.log(err)
+              }
+              else{
+               
+                return res.status(200).json({ message: "success" });
+
+               }
+
+            });
+            
           });
         });
 
-        
+
     } catch (e) {
       console.log(e);
 

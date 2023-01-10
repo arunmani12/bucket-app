@@ -7,12 +7,14 @@ import { useRouter } from 'next/router';
 const BucketMode = ({
   type = "edit",
   setOpenNewBucket,
+  setLoading
 }: {
   type: "edit" | "new";
   setOpenNewBucket: React.Dispatch<React.SetStateAction<{
     type: "edit" | "new";
     isOpen: boolean;
   }>>
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
 
 
@@ -36,6 +38,8 @@ const BucketMode = ({
 
     if(!bucketTitle.length) return
 
+    setLoading(true)
+
     const res = await fetch(`/api/addbucket`, {
       method: "POST",
       headers: {
@@ -50,13 +54,21 @@ const BucketMode = ({
 
     if (response.message == "success") {
 
+      router.replace(router.asPath);
+
       setBucketTitle("")
       
-      router.reload()
+      setOpenNewBucket((prv) => ({
+        type:'new',
+        isOpen:!prv.isOpen
+      }))
+
+      setLoading(false)
 
     } else {
+      setLoading(false)
+
       toast.error("something went to wrong");
-     
     }
   };
 

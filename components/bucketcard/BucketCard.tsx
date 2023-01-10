@@ -11,15 +11,10 @@ import {
 } from "react-icons/ai";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { MdModeEditOutline } from "react-icons/md";
+import { useRouter } from "next/router";
+import { HiFolderRemove } from "react-icons/hi";
 
-const BucketCard = ({
-  setOpenNewCardModel,
-  setOpenBucketCard,
-  setIsCardModelOpen,
-  currentBugetData,
-  togglePrevieCard,
-  setCurrentEditData,
-}: {
+interface BucketCard {
   setOpenNewCardModel: React.Dispatch<
     React.SetStateAction<{
       type: "edit" | "new";
@@ -36,20 +31,87 @@ const BucketCard = ({
   ) => void;
   currentBugetData: any;
   setCurrentEditData: any;
-}): JSX.Element => {
-  // console.log(currentBugetData);
+  setIsMoveToModelOpen: React.Dispatch<
+    React.SetStateAction<{
+      isOpen: boolean;
+      currentCard: string;
+      currentBucket: string;
+    }>
+  >;
+  setCurrentBugetData: React.Dispatch<any>
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const BucketCard = ({
+  setOpenNewCardModel,
+  setOpenBucketCard,
+  setIsCardModelOpen,
+  currentBugetData,
+  togglePrevieCard,
+  setCurrentEditData,
+  setIsMoveToModelOpen,
+  setCurrentBugetData,
+  setLoading
+}: BucketCard): JSX.Element => {
+  const router = useRouter();
 
   const onEditHandler = (d: any) => {
     setOpenNewCardModel((prv) => ({
       type: "edit",
       isOpen: !prv.isOpen,
-    }))
+    }));
     setCurrentEditData(d);
+  };
+
+
+  const onDeleteHandler = async (id: string) => {
+
+    setLoading(true)
+
+    var bucketCopy = {...currentBugetData}
+
+    var newCards = bucketCopy.card.filter((d:any)=>d._id !==id)
+
+    bucketCopy.card = newCards
+
+    setCurrentBugetData(bucketCopy)
+
+    const res = await fetch(`/api/deletecard`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id,
+      }),
+    });
+    let response = await res.json();
+
+    if (response.message == "success") {
+  
+      router.replace(router.asPath);
+
+      setLoading(false)
+
+    } else {
+      alert("something went to wrong");
+
+      setLoading(false)
+
+    }
+  };
+
+  const moveHandler = (currentCard: string, currentBucket: string) => {
+    setIsMoveToModelOpen((prv) => ({
+      isOpen: !prv.isOpen,
+      currentCard,
+      currentBucket,
+    }));
   };
 
   return (
     <div className={"wrapper " + styles.bucket}>
-      <div className={styles.backBtn}>
+      <div className={styles.backBtn} >
         <IoArrowBackCircleSharp
           onClick={() => setOpenBucketCard((prv) => !prv)}
           fontSize={32}
@@ -67,6 +129,9 @@ const BucketCard = ({
               isOpen: !prv.isOpen,
             }))
           }
+          style={{
+            justifyContent:'center'
+          }}
         >
           <h1>
             <AiOutlinePlusCircle size={32} color="grey" />
@@ -96,19 +161,21 @@ const BucketCard = ({
                 size={32}
                 style={{ marginRight: "2%" }}
               />
-              <AiTwotoneDelete color="red" size={32} />
+              <AiTwotoneDelete
+                onClick={() => onDeleteHandler(d._id)}
+                color="red"
+                size={32}
+              />
+              <HiFolderRemove
+                color="red"
+                size={32}
+                onClick={() => moveHandler(d._id, currentBugetData._id)}
+              />
             </div>
           </div>
         ))}
       </div>
 
-      <div className={styles.btnHolder}>
-        <BsFillArrowLeftCircleFill
-          size={26}
-          style={{ marginRight: "0.5rem" }}
-        />
-        <BsFillArrowRightCircleFill size={26} />
-      </div>
     </div>
   );
 };

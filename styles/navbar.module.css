@@ -36,3 +36,32 @@
     border-radius: 5px;
     font-size: 1.2rem;
 }
+
+@media only screen and (max-width: 600px) {
+
+    .navbar div{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        box-sizing: border-box;
+        margin-right: 2%;
+        /* width: 60%; */
+    }
+
+    .navbar{
+        padding: 3%;
+    }
+
+
+    .navbar div button {
+        display: flex;
+        /* margin-left: 1%; */
+        flex-direction: row;
+        font-size: 1rem;
+        margin-right: 0.5%;
+        padding: 0.25rem 0.25rem;
+    }
+    .Btnl{
+        margin-right: 5% !important;
+    }
+  }

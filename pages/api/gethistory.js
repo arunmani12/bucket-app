@@ -37,7 +37,7 @@ export default async function handler(req, res) {
     
         var history = user[0].history
 
-        console.log(history)
+        // console.log(history)
 
         return res.status(200).json({ history, message: "success" });
 
