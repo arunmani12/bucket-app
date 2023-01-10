@@ -44,7 +44,7 @@ const CardPreviewModel = ({
 
           <video controls width="100%">
             <source src={currentPrvData?.url} type="video/mp4" />
-            Sorry, your browser doesn't support embedded videos.
+            Sorry, your browser doesn&apos;t support embedded videos.
           </video>
         </div>
       </div>
