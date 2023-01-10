@@ -35,7 +35,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const jwt = ctx.req.cookies.token;
 
   if (jwt) {
-    const res = await fetch(`http://localhost:3000/api/dashboard`, {
+    const res = await fetch(`https://bucket-app.vercel.app/api/dashboard`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
